@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Student Registration')}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-9 col-lg-7">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                        <div class="card-top-accent"></div>
+                        <div class="p-4 p-md-5">
+                            <div class="text-center mb-4">
+                                <a th:href="@{/}">
+                                    <img th:src="@{/images/gsslogo.png}" alt="Gateway Software Solutions" class="mb-3" style="max-height: 48px; width: auto; object-fit: contain;">
+                                </a>
+                                <h3 class="fw-bold mb-1">Create Student Account</h3>
+                                <p class="text-muted small">Register to enroll in Gateway Software Solutions courses</p>
+                            </div>
+
+                            <form th:action="@{/register}" th:object="${registerDto}" method="post">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-person"></i></span>
+                                            <input type="text" class="form-control border-start-0" id="name" th:field="*{name}" placeholder="e.g. Alex Johnson" required>
+                                        </div>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" class="form-control border-start-0" id="email" th:field="*{email}" placeholder="student@example.com" required>
+                                        </div>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-telephone"></i></span>
+                                            <input type="tel" class="form-control border-start-0" id="phone" th:field="*{phone}" placeholder="+91 98765 43210" required>
+                                        </div>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="department" class="form-label">College / Department / Discipline</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-mortarboard"></i></span>
+                                            <input type="text" class="form-control border-start-0" id="department" th:field="*{department}" placeholder="e.g. Computer Science, IT, Electronics, BCA, MCA">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control border-start-0" id="password" th:field="*{password}" placeholder="Min 6 characters" required>
+                                        </div>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-shield-check"></i></span>
+                                            <input type="password" class="form-control border-start-0" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Repeat password" required>
+                                        </div>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn-primary-gss justify-content-center py-2 fs-6">
+                                        <i class="bi bi-check2-circle"></i> Create Account & Proceed
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="text-center pt-3 mt-4 border-top">
+                                <span class="text-muted small">Already have an account?</span>
+                                <a th:href="@{/login}" class="small fw-bold ms-1" style="color: var(--primary);">Sign in here</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

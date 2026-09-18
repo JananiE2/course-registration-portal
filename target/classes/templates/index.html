@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-7">
+                        <div class="hero-badge">
+                            <i class="bi bi-patch-check-fill text-primary"></i> Gateway Software Solutions
+                        </div>
+                        <h1 class="hero-title">
+                            Accelerate Your Career With <span class="hero-highlight">Industry-Standard</span> Tech Courses
+                        </h1>
+                        <p class="hero-lead">
+                            Discover the right technology course, register online, and manage your complete learning journey from one centralized portal.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a th:href="@{/courses}" class="btn-primary-gss btn-lg">
+                                <i class="bi bi-compass"></i> Explore All Courses
+                            </a>
+                            <a th:if="${session.loggedInUser == null}" th:href="@{/register}" class="btn-outline-gss btn-lg">
+                                <i class="bi bi-person-plus"></i> Create Student Account
+                            </a>
+                            <a th:if="${session.loggedInUser != null and session.userRole == 'STUDENT'}" th:href="@{/student/dashboard}" class="btn-outline-gss btn-lg">
+                                <i class="bi bi-speedometer2"></i> Go To Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="card border-0 shadow-lg p-4 rounded-4 bg-white position-relative">
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                                <div>
+                                    <h5 class="mb-0 fw-bold">Gateway Training Portal</h5>
+                                    <small class="text-muted">Live Registration Statistics</small>
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small">
+                                    <i class="bi bi-circle-fill me-1" style="font-size: 0.55rem;"></i> Active Term
+                                </span>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="p-3 rounded-3 bg-light border text-center">
+                                        <div class="fs-3 fw-bold text-primary" th:text="${totalCourses}">12</div>
+                                        <div class="small text-muted fw-semibold">Offered Courses</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 rounded-3 bg-light border text-center">
+                                        <div class="fs-3 fw-bold text-success" th:text="${totalStudents}">50+</div>
+                                        <div class="small text-muted fw-semibold">Active Students</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="p-3 rounded-3 bg-purple-subtle border border-primary-subtle d-flex align-items-center gap-3">
+                                        <div class="stat-icon stat-icon-purple" style="width: 44px; height: 44px; font-size: 1.25rem;">
+                                            <i class="bi bi-award"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Verified Certification</div>
+                                            <small class="text-muted">Industry-recognized Gateway credentials upon course completion</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-2 text-center">
+                                <a th:href="@{/courses}" class="text-decoration-none fw-bold small" style="color: var(--primary);">
+                                    Browse all available courses <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3-Step Explanation -->
+        <section class="py-5 bg-white border-bottom">
+            <div class="container py-3">
+                <div class="text-center max-w-700 mx-auto mb-5">
+                    <span class="badge-category mb-2">Simple & Structured</span>
+                    <h2 class="fw-bold">How Course Registration Works</h2>
+                    <p class="text-muted">Registering for your desired technology program takes less than 2 minutes.</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <h4 class="fw-bold mb-2">Browse Catalogue</h4>
+                            <p class="text-muted small">
+                                Explore all specialized technology modules from React and Python Data Science to Flutter and Gen AI.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <h4 class="fw-bold mb-2">Register Online</h4>
+                            <p class="text-muted small">
+                                Log in or create your student profile and submit your registration request with a single click.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <h4 class="fw-bold mb-2">Track & Learn</h4>
+                            <p class="text-muted small">
+                                Receive your unique Registration ID, track approval status on your dashboard, and start learning.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Courses Section -->
+        <section class="py-5">
+            <div class="container py-3">
+                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+                    <div>
+                        <span class="badge-category mb-2">High-Demand Programs</span>
+                        <h2 class="fw-bold mb-1">Featured Technology Courses</h2>
+                        <p class="text-muted mb-0">Hands-on practical training designed and delivered by Gateway Software Solutions.</p>
+                    </div>
+                    <div class="mt-3 mt-md-0">
+                        <a th:href="@{/courses}" class="btn btn-outline-gss">
+                            View All Courses <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4" th:each="course : ${featuredCourses}">
+                        <div class="custom-card h-100 d-flex flex-column">
+                            <div class="card-top-accent"></div>
+                            <div class="p-4 flex-grow-1 d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge-category" th:text="${course.category}">Web Development</span>
+                                    <span class="badge-status-active" th:if="${course.status == 'ACTIVE'}">Available</span>
+                                    <span class="badge-status-inactive" th:if="${course.status != 'ACTIVE'}">Closed</span>
+                                </div>
+                                <h4 class="fw-bold mb-2" th:text="${course.courseName}">Course Name</h4>
+                                <p class="text-secondary small flex-grow-1 mb-4" th:text="${#strings.abbreviate(course.description, 140)}">
+                                    Course description summary...
+                                </p>
+                                
+                                <div class="border-top pt-3 mt-auto">
+                                    <div class="d-flex align-items-center mb-3 text-secondary small">
+                                        <span><i class="bi bi-clock me-1 text-primary"></i> <span th:text="${course.duration}">8 Weeks</span></span>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <a th:href="@{/courses/{id}(id=${course.id})}" class="btn btn-outline-gss btn-sm">
+                                            <i class="bi bi-info-circle"></i> View Curriculum
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <a th:href="@{/courses}" class="btn-primary-gss btn-lg px-5">
+                        <i class="bi bi-collection"></i> Explore Full Course Catalogue
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section class="py-5 bg-purple-subtle border-top border-bottom">
+            <div class="container text-center py-4">
+                <h2 class="fw-bold mb-3">Ready to Upgrade Your Tech Skills?</h2>
+                <p class="text-muted mx-auto mb-4" style="max-width: 600px;">
+                    Join students and early career software professionals enrolled in Gateway Software Solutions technology certification programs.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a th:href="@{/register}" class="btn-primary-gss btn-lg">
+                        <i class="bi bi-check-circle"></i> Register Now
+                    </a>
+                    <a th:href="@{/login}" class="btn btn-outline-gss btn-lg">
+                        <i class="bi bi-person-lock"></i> Student & Admin Login
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin Dashboard')}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 rounded-pill small fw-bold mb-2 d-inline-block">
+                        <i class="bi bi-shield-lock-fill me-1"></i> Gateway Administration Portal
+                    </span>
+                    <h2 class="fw-bold mb-0">Portal Management Overview</h2>
+                    <p class="text-muted mb-0">Monitor student registrations, course catalogue statistics, and review pending admissions.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/admin/courses/new}" class="btn-primary-gss">
+                        <i class="bi bi-plus-lg"></i> Add New Course
+                    </a>
+                    <a th:href="@{/admin/registrations}" class="btn btn-outline-gss">
+                        <i class="bi bi-list-check"></i> Review Registrations
+                    </a>
+                </div>
+            </div>
+
+            <!-- Metric Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-purple">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <div>
+                            <div class="fs-4 fw-bold" th:text="${totalCourses}">12</div>
+                            <div class="small text-muted fw-semibold">Total Courses</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-blue">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div>
+                            <div class="fs-4 fw-bold" th:text="${totalStudents}">4</div>
+                            <div class="small text-muted fw-semibold">Registered Students</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-amber">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                        <div>
+                            <div class="fs-4 fw-bold" th:text="${pendingRegistrations}">1</div>
+                            <div class="small text-muted fw-semibold">Pending Review</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-emerald">
+                            <i class="bi bi-check2-all"></i>
+                        </div>
+                        <div>
+                            <div class="fs-4 fw-bold" th:text="${totalRegistrations}">2</div>
+                            <div class="small text-muted fw-semibold">Total Registrations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Registrations Section -->
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+                <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold mb-0">Recent Course Applications</h4>
+                        <small class="text-muted">Latest student enrollments across Gateway course streams</small>
+                    </div>
+                    <a th:href="@{/admin/registrations}" class="btn btn-outline-gss btn-sm">
+                        View All Registrations <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>Reg ID</th>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th class="text-end">Manage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(recentRegistrations)}">
+                                <td colspan="6" class="text-center py-4 text-muted">No student applications recorded yet.</td>
+                            </tr>
+                            <tr th:each="reg : ${recentRegistrations}">
+                                <td>
+                                    <span class="badge bg-light text-dark border font-monospace" th:text="'GSS-REG-' + ${reg.id}">GSS-REG-101</span>
+                                </td>
+                                <td>
+                                    <strong class="d-block text-dark" th:text="${reg.user.name}">Student Name</strong>
+                                    <small class="text-muted" th:text="${reg.user.email}">email</small>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-dark" th:text="${reg.course.courseName}">Course</span>
+                                    <small class="d-block text-muted" th:text="${reg.course.category}">Category</small>
+                                </td>
+                                <td th:text="${#temporals.format(reg.registrationDate, 'dd-MMM-yyyy HH:mm')}">Date</td>
+                                <td>
+                                    <span th:if="${reg.status == 'PENDING'}" class="badge-reg-pending">PENDING</span>
+                                    <span th:if="${reg.status == 'CONFIRMED'}" class="badge-reg-confirmed">CONFIRMED</span>
+                                    <span th:if="${reg.status == 'REJECTED'}" class="badge-reg-rejected">REJECTED</span>
+                                    <span th:if="${reg.status == 'CANCELLED'}" class="badge-reg-cancelled">CANCELLED</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/registrations(status=${reg.status})}" class="btn btn-sm btn-outline-primary">
+                                        Review <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Quick Management Links Card -->
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="stat-icon stat-icon-purple" style="width: 46px; height: 46px; font-size: 1.3rem;">
+                                <i class="bi bi-journals"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">Course Catalogue Management</h5>
+                                <small class="text-muted">Create, edit, toggle active status, or update fees</small>
+                            </div>
+                        </div>
+                        <p class="text-secondary small mb-4">
+                            Ensure all 12 Gateway Software Solutions programs remain updated with correct duration, syllabus, fees, and enrollment availability.
+                        </p>
+                        <div class="mt-auto d-flex gap-2">
+                            <a th:href="@{/admin/courses}" class="btn btn-outline-gss btn-sm">
+                                <i class="bi bi-card-list"></i> Course List
+                            </a>
+                            <a th:href="@{/admin/courses/new}" class="btn-primary-gss btn-sm">
+                                <i class="bi bi-plus-circle"></i> New Course
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="stat-icon stat-icon-emerald" style="width: 46px; height: 46px; font-size: 1.3rem;">
+                                <i class="bi bi-patch-check"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">Admissions & Verification</h5>
+                                <small class="text-muted">Approve, reject, or comment on applicant registrations</small>
+                            </div>
+                        </div>
+                        <p class="text-secondary small mb-4">
+                            Review new student enrollment submissions, set approval remarks, and manage admission batch capacities easily.
+                        </p>
+                        <div class="mt-auto">
+                            <a th:href="@{/admin/registrations(status='PENDING')}" class="btn btn-outline-gss btn-sm">
+                                <i class="bi bi-hourglass-split"></i> Review Pending Applications
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

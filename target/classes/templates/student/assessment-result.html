@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Assessment Result - ' + ${course.courseName})}"></head>
+<body class="bg-light">
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <!-- Result Card -->
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white text-center">
+                        <div th:class="${submission.passed ? 'bg-success py-2' : 'bg-danger py-2'}"></div>
+
+                        <div class="p-4 p-md-5">
+                            <!-- PASS STATE -->
+                            <div th:if="${submission.passed}">
+                                <div class="stat-icon bg-success-subtle text-success mx-auto mb-3" style="width: 76px; height: 76px; font-size: 2.5rem; border-radius: 50%;">
+                                    <i class="bi bi-patch-check-fill"></i>
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill small fw-bold text-uppercase mb-2">
+                                    Assessment Passed
+                                </span>
+                                <h2 class="fw-bold text-dark mb-1">Congratulations!</h2>
+                                <p class="text-muted small mb-4" th:text="'You have successfully completed the final assessment for ' + ${course.courseName} + '.'">
+                                    Course assessment passed.
+                                </p>
+
+                                <!-- Score Breakdown Box -->
+                                <div class="row g-3 justify-content-center mb-4">
+                                    <div class="col-4">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <div class="fs-3 fw-bold text-success" th:text="${submission.scorePercentage} + '%'">80%</div>
+                                            <div class="small text-muted fw-semibold">Final Score</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <div class="fs-3 fw-bold text-dark" th:text="${submission.correctAnswers} + ' / ' + ${submission.totalQuestions}">4 / 5</div>
+                                            <div class="small text-muted fw-semibold">Correct Answers</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <div class="fs-3 fw-bold text-primary" th:text="'#' + ${submission.attemptNumber}">#1</div>
+                                            <div class="small text-muted fw-semibold">Attempt</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-success border-0 rounded-4 p-3 mb-4 d-flex align-items-center justify-content-center gap-2">
+                                    <i class="bi bi-unlock-fill fs-5 text-success"></i>
+                                    <span class="small fw-semibold text-success">
+                                        Official Verified Certificate is now <strong>UNLOCKED</strong> and ready to generate!
+                                    </span>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a th:href="@{/student/learn/{courseId}/certificate(courseId=${course.id})}" class="btn btn-success btn-lg py-3 fw-bold shadow">
+                                        <i class="bi bi-award-fill me-2"></i> View & Print Official Certificate
+                                    </a>
+                                    <a th:href="@{/student/learn/{courseId}(courseId=${course.id})}" class="btn btn-outline-secondary">
+                                        Back to Classroom
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- FAIL STATE -->
+                            <div th:if="${!submission.passed}">
+                                <div class="stat-icon bg-danger-subtle text-danger mx-auto mb-3" style="width: 76px; height: 76px; font-size: 2.5rem; border-radius: 50%;">
+                                    <i class="bi bi-shield-x"></i>
+                                </div>
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 rounded-pill small fw-bold text-uppercase mb-2">
+                                    Needs Improvement
+                                </span>
+                                <h2 class="fw-bold text-dark mb-1">Assessment Not Passed</h2>
+                                <p class="text-muted small mb-4" th:text="'Passing requirement is ' + ${passingScore} + '%. You scored ' + ${submission.scorePercentage} + '% on attempt #' + ${submission.attemptNumber} + '.'">
+                                    You did not achieve the required passing score.
+                                </p>
+
+                                <!-- Score Breakdown Box -->
+                                <div class="row g-3 justify-content-center mb-4">
+                                    <div class="col-4">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <div class="fs-3 fw-bold text-danger" th:text="${submission.scorePercentage} + '%'">40%</div>
+                                            <div class="small text-muted fw-semibold">Your Score</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <div class="fs-3 fw-bold text-dark" th:text="${submission.correctAnswers} + ' / ' + ${submission.totalQuestions}">2 / 5</div>
+                                            <div class="small text-muted fw-semibold">Correct</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <div class="fs-3 fw-bold text-warning" th:text="${passingScore} + '%'">60%</div>
+                                            <div class="small text-muted fw-semibold">Pass Required</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-danger border-0 rounded-4 p-3 mb-4 d-flex align-items-center justify-content-center gap-2">
+                                    <i class="bi bi-lock-fill fs-5 text-danger"></i>
+                                    <span class="small fw-semibold text-danger">
+                                        Certificate Remains <strong>LOCKED</strong>. You cannot generate the certificate until you pass.
+                                    </span>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a th:href="@{/student/learn/{courseId}/assessment(courseId=${course.id})}" class="btn btn-primary-gss btn-lg py-3 fw-bold shadow">
+                                        <i class="bi bi-arrow-repeat me-2"></i> Retake Final Assessment
+                                    </a>
+                                    <a th:href="@{/student/learn/{courseId}(courseId=${course.id})}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-book me-1"></i> Review Course Modules & Syllabus
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

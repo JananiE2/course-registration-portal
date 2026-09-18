@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${course.courseName})}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/courses}" class="text-decoration-none">Courses</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="${course.courseName}">Course Name</li>
+                </ol>
+            </nav>
+
+            <div class="row g-4">
+                <!-- Left Main Column: Details & Syllabus -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                            <span class="badge-category" th:text="${course.category}">Web Development</span>
+                            <span class="badge-status-active" th:if="${course.status == 'ACTIVE'}">Available For Registration</span>
+                            <span class="badge-status-inactive" th:if="${course.status != 'ACTIVE'}">Currently Inactive</span>
+                        </div>
+
+                        <h1 class="fw-bold mb-3" th:text="${course.courseName}">Course Name</h1>
+                        <p class="text-secondary lead fs-6 mb-4" style="line-height: 1.7;" th:text="${course.description}">
+                            Full course description...
+                        </p>
+
+                        <hr class="my-4">
+
+                        <h4 class="fw-bold mb-3"><i class="bi bi-journal-bookmark-fill text-primary me-2"></i>Course Curriculum & Key Topics</h4>
+                        <div class="list-group list-group-flush border rounded-3 overflow-hidden" th:if="${not #lists.isEmpty(course.topics)}">
+                            <div class="list-group-item d-flex align-items-start gap-3 py-3" th:each="topic, iter : ${course.topics}">
+                                <span class="badge bg-primary-subtle text-primary rounded-circle p-2 mt-1" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;" th:text="${iter.count}">1</span>
+                                <div>
+                                    <h6 class="mb-1 fw-bold text-dark" th:text="${topic.topic}">Topic Name</h6>
+                                    <small class="text-muted" th:text="${topic.description}">Topic description...</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(course.topics)}" class="p-3 bg-light rounded text-muted small">
+                            Detailed syllabus module guide will be distributed during orientation.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar: Pricing Card & Registration Action -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden position-sticky" style="top: 90px;">
+                        <div class="card-top-accent"></div>
+                        <div class="p-4">
+                            <div class="text-center pb-3 border-bottom mb-4">
+                                <span class="small text-muted text-uppercase fw-bold">Training Fee</span>
+                                <div class="fs-2 fw-bold text-dark my-1" th:text="'₹' + ${#numbers.formatDecimal(course.fee, 0, 'COMMA', 2, 'POINT')}">
+                                    ₹12,000
+                                </div>
+                                <span class="badge bg-success-subtle text-success small">Includes Certification & Materials</span>
+                            </div>
+
+                            <ul class="list-unstyled d-flex flex-column gap-3 mb-4 small">
+                                <li class="d-flex justify-content-between">
+                                    <span class="text-muted"><i class="bi bi-clock me-2 text-primary"></i>Duration</span>
+                                    <strong th:text="${course.duration}">8 Weeks</strong>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span class="text-muted"><i class="bi bi-layers me-2 text-primary"></i>Stream / Category</span>
+                                    <strong th:text="${course.category}">Web Tech</strong>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span class="text-muted"><i class="bi bi-building me-2 text-primary"></i>Organization</span>
+                                    <strong>Gateway Software</strong>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span class="text-muted"><i class="bi bi-shield-check me-2 text-primary"></i>Prerequisites</span>
+                                    <strong>Basic Computing</strong>
+                                </li>
+                            </ul>
+
+                            <div class="d-grid gap-2">
+                                <!-- If already registered -->
+                                <div th:if="${isRegistered}" class="alert alert-info py-2 px-3 small text-center mb-0 border-0">
+                                    <i class="bi bi-check-circle-fill me-1"></i> You are already enrolled in this course.
+                                </div>
+                                <a th:if="${isRegistered}" th:href="@{/student/dashboard}" class="btn btn-outline-gss">
+                                    <i class="bi bi-speedometer2"></i> View In Dashboard
+                                </a>
+
+                                <!-- If not yet registered -->
+                                <a th:if="${!isRegistered and course.status == 'ACTIVE'}" th:href="@{/register-course/{id}(id=${course.id})}" class="btn-primary-gss justify-content-center py-2 fs-6">
+                                    <i class="bi bi-pencil-square"></i> Register For This Course
+                                </a>
+
+                                <button th:if="${course.status != 'ACTIVE'}" class="btn btn-secondary py-2" disabled>
+                                    Registration Closed
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <small class="text-muted"><i class="bi bi-lock-fill me-1"></i>Instant registration confirmation</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Final Course Assessment - ' + ${course.courseName})}"></head>
+<body class="bg-light">
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Assessment Header & Instructions -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-9">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                            <div>
+                                <a th:href="@{/student/learn/{courseId}(courseId=${course.id})}" class="btn btn-outline-secondary btn-sm mb-2">
+                                    <i class="bi bi-arrow-left me-1"></i> Back to Classroom
+                                </a>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill small fw-bold">
+                                        <i class="bi bi-award-fill me-1"></i> Gateway Certification Examination
+                                    </span>
+                                    <span class="badge bg-warning-subtle text-dark border border-warning-subtle px-3 py-1 rounded-pill small fw-bold">
+                                        <i class="bi bi-shield-check me-1"></i> Pass Mark: <span th:text="${passingScore}">60</span>%
+                                    </span>
+                                </div>
+                                <h3 class="fw-bold mt-2 mb-1 text-dark" th:text="${course.courseName}">Python Fullstack</h3>
+                                <p class="text-muted small mb-0">
+                                    Answer all technical questions below. You must achieve at least <strong th:text="${passingScore} + '%'">60%</strong> to verify competence and unlock your official Course Completion Certificate.
+                                </p>
+                            </div>
+
+                            <div class="text-md-end p-3 rounded-3 bg-light border" style="min-width: 170px;">
+                                <div class="text-muted small fw-semibold">Total Questions</div>
+                                <div class="fs-3 fw-bold text-primary" th:text="${#lists.size(questions)}">5</div>
+                                <small class="text-secondary"><i class="bi bi-stopwatch me-1"></i> No Time Limit</small>
+                            </div>
+                        </div>
+
+                        <!-- Previous Attempt Notice if applicable -->
+                        <div th:if="${latestSubmission != null and !latestSubmission.passed}" class="alert alert-warning border-0 rounded-3 mt-3 mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-exclamation-circle-fill text-warning fs-5"></i>
+                            <div class="small">
+                                Previous Attempt Score: <strong th:text="${latestSubmission.scorePercentage} + '%'">40%</strong>. The certificate remains locked until you score at least <strong th:text="${passingScore} + '%'">60%</strong>. Take your time to review the questions.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examination Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <form th:action="@{/student/learn/{courseId}/assessment(courseId=${course.id})}" method="post" id="assessmentForm">
+                        <div class="d-flex flex-column gap-4">
+                            <!-- Question Cards -->
+                            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" th:each="q, iterStat : ${questions}">
+                                <div class="p-4">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <span class="badge bg-purple-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill small fw-bold">
+                                            Question <span th:text="${iterStat.count}">1</span> of <span th:text="${#lists.size(questions)}">5</span>
+                                        </span>
+                                        <small class="text-muted"><i class="bi bi-check-circle me-1"></i> Select 1 Option</small>
+                                    </div>
+
+                                    <h5 class="fw-bold text-dark mb-4" th:text="${q.questionText}">Question prompt text here...</h5>
+
+                                    <!-- Option Choices -->
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="form-check custom-option-card p-3 rounded-3 border" th:each="opt, optStat : ${q.options}">
+                                            <input class="form-check-input ms-0 me-3" 
+                                                   type="radio" 
+                                                   th:name="'q_' + ${q.id}" 
+                                                   th:id="'q_' + ${q.id} + '_opt_' + ${optStat.index}" 
+                                                   th:value="${optStat.index}" 
+                                                   required>
+                                            <label class="form-check-label fw-semibold text-secondary w-100 cursor-pointer" 
+                                                   th:for="'q_' + ${q.id} + '_opt_' + ${optStat.index}" 
+                                                   th:text="${opt}">
+                                                Option description text
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Bar -->
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
+                                <h5 class="fw-bold mb-2">Ready to Submit Your Answers?</h5>
+                                <p class="text-muted small mb-3">
+                                    Double-check all questions above. Your score will be calculated instantly upon submission.
+                                </p>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <a th:href="@{/student/learn/{courseId}(courseId=${course.id})}" class="btn btn-outline-secondary px-4">
+                                        Cancel & Return
+                                    </a>
+                                    <button type="submit" class="btn btn-primary-gss px-5 py-2 fs-6 fw-bold">
+                                        <i class="bi bi-send-check me-2"></i> Submit Assessment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <style>
+        .custom-option-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-option-card:hover {
+            background-color: var(--primary-subtle);
+            border-color: var(--primary) !important;
+        }
+
+        .custom-option-card .form-check-input:checked ~ .form-check-label {
+            color: var(--primary) !important;
+            font-weight: 700 !important;
+        }
+
+        .custom-option-card:has(.form-check-input:checked) {
+            background-color: var(--primary-subtle);
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>

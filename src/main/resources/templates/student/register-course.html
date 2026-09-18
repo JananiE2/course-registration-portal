@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Course Registration')}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/courses}" class="text-decoration-none">Courses</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/courses/{id}(id=${course.id})}" class="text-decoration-none" th:text="${course.courseName}">Course</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Register</li>
+                </ol>
+            </nav>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+                        <div class="card-top-accent"></div>
+                        <div class="p-4 p-md-5">
+                            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                                <div class="stat-icon stat-icon-purple" style="width: 54px; height: 54px; font-size: 1.5rem;">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                </div>
+                                <div>
+                                    <h3 class="fw-bold mb-0">Confirm Course Registration</h3>
+                                    <p class="text-muted small mb-0">Review details below and submit your admission application</p>
+                                </div>
+                            </div>
+
+                            <!-- Course Summary Box -->
+                            <div class="p-3 rounded-3 bg-purple-subtle border border-primary-subtle mb-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge-category" th:text="${course.category}">Category</span>
+                                    <span class="fs-5 fw-bold text-dark" th:text="'₹' + ${#numbers.formatDecimal(course.fee, 0, 'COMMA', 2, 'POINT')}">₹12,000</span>
+                                </div>
+                                <h4 class="fw-bold mb-1" th:text="${course.courseName}">Course Name</h4>
+                                <p class="text-secondary small mb-2" th:text="${course.description}">Short description</p>
+                                <div class="d-flex gap-4 small text-muted">
+                                    <span><i class="bi bi-clock me-1 text-primary"></i> <strong th:text="${course.duration}">8 Weeks</strong></span>
+                                    <span><i class="bi bi-building me-1 text-primary"></i> Gateway Software Solutions</span>
+                                </div>
+                            </div>
+
+                            <!-- Form -->
+                            <form th:action="@{/register-course/{id}(id=${course.id})}" method="post">
+                                <h5 class="fw-bold text-dark mb-3">Applicant Information</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Student Name</label>
+                                        <input type="text" class="form-control bg-light" th:value="${user.name}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Email Address</label>
+                                        <input type="email" class="form-control bg-light" th:value="${user.email}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Contact Phone</label>
+                                        <input type="text" class="form-control bg-light" th:value="${user.phone}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small">Department / Academic Stream</label>
+                                        <input type="text" class="form-control bg-light" th:value="${user.department != null ? user.department : 'General'}" readonly>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="remarks" class="form-label">Applicant Remarks / Batch Preference <span class="badge bg-light text-muted border fw-normal small">Optional</span></label>
+                                        <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="e.g. Preferred batch: Weekend or Evening, relevant prior knowledge, or specific training queries..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-light border small text-muted mb-4 d-flex align-items-start gap-2">
+                                    <i class="bi bi-info-circle-fill text-primary mt-1"></i>
+                                    <div>
+                                        By clicking <strong>Submit Registration</strong>, your application will be forwarded to Gateway Software Solutions administration. You will receive an official Registration ID for tracking.
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a th:href="@{/courses/{id}(id=${course.id})}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left"></i> Back to Course
+                                    </a>
+                                    <button type="submit" class="btn-primary-gss btn-lg px-4">
+                                        <i class="bi bi-send-check"></i> Submit Registration
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

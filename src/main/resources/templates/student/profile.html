@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Student Profile')}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/student/dashboard}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Student Profile</li>
+                </ol>
+            </nav>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                        <div class="card-top-accent"></div>
+                        <div class="p-4 p-md-5">
+                            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                                <div class="stat-icon stat-icon-purple" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                    <i class="bi bi-person-badge"></i>
+                                </div>
+                                <div>
+                                    <h3 class="fw-bold mb-0">Student Profile</h3>
+                                    <small class="text-muted">Manage your personal and academic contact information</small>
+                                </div>
+                            </div>
+
+                            <form th:action="@{/student/profile}" th:object="${profileDto}" method="post">
+                                <h5 class="fw-bold text-dark mb-3">Academic & Personal Details</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email Address (Immutable)</label>
+                                        <input type="email" class="form-control bg-light" id="email" th:value="${user.email}" readonly disabled>
+                                        <small class="text-muted">Email cannot be changed after registration.</small>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="phone" th:field="*{phone}" required>
+                                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="department" class="form-label">College / Department</label>
+                                        <input type="text" class="form-control" id="department" th:field="*{department}" placeholder="e.g. Computer Science & Engineering">
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <h5 class="fw-bold text-dark mb-2">Change Password <span class="badge bg-light text-muted border fw-normal small">Optional</span></h5>
+                                <p class="text-muted small mb-3">Leave both password fields blank if you do not want to change your password.</p>
+
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label for="currentPassword" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" id="currentPassword" th:field="*{currentPassword}" placeholder="Verify current password">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="newPassword" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="newPassword" th:field="*{newPassword}" placeholder="Min 6 characters">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a th:href="@{/student/dashboard}" class="btn btn-outline-secondary">Cancel</a>
+                                    <button type="submit" class="btn-primary-gss">
+                                        <i class="bi bi-save"></i> Save Profile Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
