@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Gateway Software Solutions — Course Registration Portal
 
 A complete, production-grade Java Full-Stack web application engineered strictly adhering to the 12-page **Gateway Software Solutions (GSS) Course Registration Portal** specification.
@@ -79,3 +80,6 @@ In a terminal window from this directory:
 ```
 
 The portal will start on: **`http://localhost:8080`**
+=======
+# course-registration-portal
+>>>>>>> a58f7e3e00fb4fffbddae737e6dc8756a45859e4
