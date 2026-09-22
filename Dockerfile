@@ -1,4 +1,5 @@
-FROM eclipse-temurin:26-jdk AS build
+# Stage 1: Build the Spring Boot application
+FROM eclipse-temurin:17-jdk AS build
 
 WORKDIR /app
 
@@ -9,7 +10,8 @@ RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 
-FROM eclipse-temurin:26-jre
+# Stage 2: Run the Spring Boot application
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
